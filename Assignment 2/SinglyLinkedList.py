@@ -19,7 +19,7 @@ class LinkedList:
             new_node = Node(val)
             #insert in front
             new_node.next = self.head
-            self.head = new_node.next
+            self.head = new_node
 
         return self.head
     
@@ -34,56 +34,59 @@ class LinkedList:
                 temp = temp.next
             temp.next = Node(val)
 
-    def insertAfter(self, val, i):
-        if i == self.length() or not self.head:
+    def insertAfter(self, val, pos):
+        #if position is invalid or head insertion is empty
+        if pos >= self.length() or not self.head:
             return
-        elif i == self.length() - 1:
+        elif pos == self.length() - 1:
+            #if insertion is at last position
             self.insertAtBack(val)
         else:
             curr = self.head
             count = 0
-            while count != i:
+            while count != pos:
                 curr = curr.next
                 count += 1
             new_node = Node(val)
             new_node.next = curr.next
             curr.next = new_node
     
-    # removes first Node; returns new head
     def deleteFront(self):
         if self.head:
-            dummy = Node(0)
-            dummy.next = self.head.next
-            self.head = dummy.next
-        return self.head.val
+            # temp node 
+            curr = Node(0)
+            # temp next points to 2nd node in array
+            curr.next = self.head.next
+            # head becomes pointer to node^
+            self.head = curr.next
+        return self.head
     
-    # removes last Node
     def deleteBack(self):
         if self.head:
             curr = self.head
             prev = self.head
+
             while curr.next:
                 prev = curr
                 curr = curr.next
             prev.next = None
     
-    # removes node at index; returns head
-    def deleteNode(self, i):
-        if i == self.length():
+    def deleteNode(self, loc):
+        if loc >= self.length():
             return
-        elif i == 0: 
+        elif loc == 0: 
             self.deleteFront()
-        elif i == self.length() - 1:
+        elif loc == self.length() - 1:
             self.deleteBack()
         prev, curr = self.head, self.head
         count = 0
-        while count != i:
+        while count != loc:
             prev = curr
             curr = curr.next
             count += 1
         prev.next = curr.next
+        return self.head
     
-    # returns length of linked list
     def length(self):
         if not self.head:
             return 0
@@ -94,54 +97,65 @@ class LinkedList:
             curr = curr.next
         return count
 
-    # reverses Linked List iteratively
-    def reverseIterative(self, head):
+    def reverseIterative(self):
         if not self.head:
             return
+        
         prev = None
-        curr = self.head
-        while curr:
-            temp = curr.next
-            curr.next = prev
-            prev = curr
-            curr = temp
-            
-        return prev
+        while self.head.next:
+            #basically flipping the pointers in other direction
+            next = self.head.next 
+            self.head.next = prev
+            prev = self.head 
+            self.head = next 
+        self.head.next = prev
     
-    # reverses Linked List recursively
-    def reverseRecursive(self, head):
-        if not head:
-            return None
-        newHead = head
-        if head.next:
-            newHead = self.reverseRecursive(head.next)
-            head.next.next = head
+    def reverseRecursive(self):
+        if not self.head:
+            return
+        
+        return self.recursiveHelper(self.head)
+    
+    def recursiveHelper(self, head):
+        # If head is empty or has reached the list end
+        if head is None or head.next is None:
+            return head
+ 
+        # Reverse the rest list
+        self.recursiveHelper(head.next)
+ 
+        # Put first element at the end
+        head.next.next = head
         head.next = None
-        return newHead
+
+            
         
     # prints list
     def print(self):
-        res = []
         curr = self.head
         while curr:
-            res.append(curr.val)
+            print(curr.data, end=" ")
             curr = curr.next
-        print('| ', end="")
-        for i in res: 
-            print(i, end = " | ")
+        print()
 
 def main():
     list = LinkedList()
 
-    list.insertAtFront(1)  
-    list.insertAtFront(2)  
-    list.insertAtBack(3)   
-    list.insertAtBack(4)   
-    list.insertAtBack(5)   
-    list.deleteFront()    
-    list.deleteBack()    
-    list.deleteNode(1)   
+    list.insertAtFront(2)   # 2
+    list.insertAtFront(1)   # 1 2
+    list.insertAtBack(3)    # 1 2 3 
+    list.insertAtBack(4)    # 1 2 3 4 
+    list.insertAfter(5, 3)  # 1 2 3 4 5
+    list.deleteFront()      # 2 3 4 5
+    list.deleteBack()       # 2 3 4
+    list.deleteNode(1)      # 2 4
+    list.insertAtBack(6)    # 2 4 6
+    list.print()
     
+    list.reverseIterative() # 6 4 2
+    list.print()
+
+    list.reverseRecursive() # 2 4 6
     list.print()
 
 main()
