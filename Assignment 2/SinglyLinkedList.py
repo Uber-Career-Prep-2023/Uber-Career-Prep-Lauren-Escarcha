@@ -118,13 +118,21 @@ class LinkedList:
     
     def reverse(self, cur, prev):
         if cur is None:
+            # reinitialize the head!!!!!!
+            self.head = prev
             return prev
         else:
             next = cur.next
+
+            # reverses pointer
             cur.next = prev
 
-            # print("cur " + str(cur.data))
-            # print("prev " + str(next))
+            print("cur " + str(cur.data))
+
+            # if next is not None:
+            #     print("prev " + str(next.data))
+            # else: 
+            #     print("prev " + str(next))
 
             return self.reverse(next, cur)
          
