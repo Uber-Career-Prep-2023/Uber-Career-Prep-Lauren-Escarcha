@@ -111,24 +111,23 @@ class LinkedList:
         self.head.next = prev
     
     def reverseRecursive(self):
-        if not self.head:
-            return
-        
-        return self.recursiveHelper(self.head)
-    
-    def recursiveHelper(self, head):
-        # If head is empty or has reached the list end
-        if head is None or head.next is None:
-            return head
- 
-        # Reverse the rest list
-        self.recursiveHelper(head.next)
- 
-        # Put first element at the end
-        head.next.next = head
-        head.next = None
 
-            
+        head = self.head
+
+        return self.reverse(head, None)
+    
+    def reverse(self, cur, prev):
+        if cur is None:
+            return prev
+        else:
+            next = cur.next
+            cur.next = prev
+
+            # print("cur " + str(cur.data))
+            # print("prev " + str(next))
+
+            return self.reverse(next, cur)
+         
         
     # prints list
     def print(self):
