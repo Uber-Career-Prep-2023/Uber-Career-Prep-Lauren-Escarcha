@@ -1,13 +1,15 @@
 class Node:
     #constructor
-    def __init__(self, data=0, next=None): 
+    def __init__(self, data=0, next=None, prev=None): 
         self.data = data
         self.next = next
+        self.prev = prev
 
 class LinkedList:
     def __init__(self): 
         #define head of list
         self.head = None
+        #does a doubly linked list have a tail var?
     
     def insertAtFront(self, val):
         #if the list is empty
@@ -19,6 +21,7 @@ class LinkedList:
             new_node = Node(val)
             #insert in front
             new_node.next = self.head
+            self.head.prev = new_node
             self.head = new_node
 
         return self.head
@@ -32,7 +35,12 @@ class LinkedList:
             temp = self.head
             while temp.next:
                 temp = temp.next
-            temp.next = Node(val)
+
+            #once reached end
+            new_node = Node(val)
+            #insert in back
+            new_node.prev = temp
+            temp.next = new_node
 
     def insertAfter(self, val, pos):
         #if position is invalid or head insertion is empty
@@ -47,9 +55,13 @@ class LinkedList:
             while count != pos:
                 curr = curr.next
                 count += 1
+
             new_node = Node(val)
+            curr.next.prev = new_node
             new_node.next = curr.next
-            curr.next = new_node
+            new_node.prev = curr
+            curr.next = new_node            
+
     
     def deleteFront(self):
         if self.head:
@@ -59,17 +71,21 @@ class LinkedList:
             curr.next = self.head.next
             # head becomes pointer to node^
             self.head = curr.next
+            self.head.prev = curr
+
         return self.head
     
     def deleteBack(self):
         if self.head:
             curr = self.head
-            prev = self.head
+            last = self.head
 
             while curr.next:
-                prev = curr
+                last = curr
                 curr = curr.next
-            prev.next = None
+
+            #at last node
+            last.next = None
     
     def deleteNode(self, loc):
         if loc >= self.length():
@@ -78,13 +94,16 @@ class LinkedList:
             self.deleteFront()
         elif loc == self.length() - 1:
             self.deleteBack()
-        prev, curr = self.head, self.head
+
+        before, curr = self.head, self.head
         count = 0
         while count != loc:
-            prev = curr
+            before = curr
             curr = curr.next
             count += 1
-        prev.next = curr.next
+
+        before.next = curr.next
+        curr.next.prev = before
         return self.head
     
     def length(self):
@@ -101,14 +120,18 @@ class LinkedList:
         if not self.head:
             return
         
-        prev = None
+        before = None
         while self.head.next:
             #basically flipping the pointers in other direction
-            next = self.head.next 
-            self.head.next = prev
-            prev = self.head 
-            self.head = next 
-        self.head.next = prev
+            after = self.head.next 
+            self.head.next = before
+            self.head.prev = after
+
+            before = self.head 
+            self.head = after 
+
+        self.head.next = before
+        self.head.prev = after
     
     def reverseRecursive(self):
 
@@ -125,6 +148,7 @@ class LinkedList:
             next = cur.next
 
             # reverses pointer
+            cur.prev = next
             cur.next = prev
 
             # print("cur " + str(cur.data))
