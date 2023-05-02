@@ -65,9 +65,9 @@ class BinarySearchTree :
                 node = q.popleft()
                 if node:
                     leftSide = node
-                    #left child before right
-                    q.append(node.left)
+                    #right before left
                     q.append(node.right)
+                    q.append(node.left)
             if leftSide:
                 res.append(leftSide.val)
         return res
@@ -76,18 +76,18 @@ class BinarySearchTree :
 def main():
     bst = BinarySearchTree()
 
-    # used https://www.cs.usfca.edu/~galles/visualization/BST.html
-    # to visualize tree
     bst.insert(7) 
     bst.insert(8)
     bst.insert(3)
     bst.insert(4)
-    bst.insert(5)
-    bst.insert(6)
     bst.insert(9)
+    bst.insert(13)
+    bst.insert(20) 
+    bst.insert(12)
+    bst.insert(15)
     bst.print()
 
-    #should be 7 8 9 5 6
+    #should be 7 3 4 13 12 15
     res = bst.LeftView()
     print()
 
