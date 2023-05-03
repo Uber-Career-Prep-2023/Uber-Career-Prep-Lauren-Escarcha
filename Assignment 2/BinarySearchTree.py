@@ -82,44 +82,58 @@ class BinarySearchTree :
             self.root = Node(val)
         self.insertHelper(self.root, val)
 
+    def minInBranch(cur):    
+        # loop down to find the leftmost leaf
+        while(cur.left is not None):
+            cur = cur.left
+    
+        return cur
+
     #helper function for deletion recursion
     def deleteHelper(self, cur, val):
         if cur is None:
             return cur
-        elif(val < cur.val):
-            self.deleteHelper(cur.left, val)
+    
+        # less than, left subtree
+        if val < cur.val:
+            cur.left = self.deleteHelper(cur.left, val)
+    
+        # greater than, right subtree
         elif(val > cur.val):
-            self.deleteHelper(cur.right, val)
-        #the meat
+            cur.right = self.deleteHelper(cur.right, val)
+    
+        # If key is same as root's key, then this is the node
+        # to be deleted
         else:
-            print(cur.val)
-            #if node has ONE or no child
+    
+            # Node with only one child or no child
             if cur.left is None:
                 temp = cur.right
                 cur = None
                 return temp
+    
             elif cur.right is None:
                 temp = cur.left
                 cur = None
                 return temp
-            
-            #TWO children 
-            # get smallet in right subtree
-            temp = self.minHelper(cur.right)
-
-            # copy temp val into cur
+    
+            # two children:
+            # Get the inorder successor
+            # (smallest in the GIVEN right subtree)
+            temp = self.minInBranch(cur.right)
+    
+            # Copy the inorder successor's
+            # content to this node
             cur.val = temp.val
-
-            #delete 
+    
+            # Delete the inorder successor
             cur.right = self.deleteHelper(cur.right, temp.val)
-
+    
         return cur
             
-
-
     #deletes the Node with data val, if it exists
     def delete(self, val):
-        print(self.deleteHelper(self.root, val).val)
+        self.deleteHelper(self.root, val)
         return 
     
     #for testing
@@ -158,7 +172,7 @@ def main():
     #contains = false
     print("contains 9: " + str(bst.contains(9)))
 
-    #delete 
+    #delete SUCCESS
     bst.delete(5)
     # tree test
     bst.print()
