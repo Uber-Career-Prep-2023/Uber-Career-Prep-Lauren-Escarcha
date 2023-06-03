@@ -75,6 +75,29 @@ class AdjacencyList:
                     q.append(neighbor)
                     visited.add(neighbor)
 
+    def topologicalSort(self):
+        self.vertices = len(self.graph)
+        visited = set()
+        stack = [] #stack using a list 
+
+        #iterate thru all nodes
+        for node in self.graph:
+            if node not in visited:
+                self.topologicalSortHelper(node, visited, stack)
+
+        # Print contents of the stack
+        print(stack.reverse())
+
+    def topologicalSortHelper(self, node, visited, stack):
+        visited.add(node)
+
+        for neighbor in self.graph[node]:
+            if neighbor not in visited:
+                self.topologicalSortHelper(neighbor, visited, stack)
+
+        stack.append(node)
+                
+
     
     def printGraph(self):
 
@@ -102,6 +125,9 @@ def main():
 
     print("\nBFS: ")
     graph.BFS()
+
+    print("\nTopological Sort: ")
+    graph.topologicalSort()
 
 main()
 
