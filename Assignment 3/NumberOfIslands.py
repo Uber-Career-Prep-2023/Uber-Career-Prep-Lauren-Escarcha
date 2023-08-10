@@ -1,33 +1,51 @@
-def num_islands(board):
+import collections
+class Solution:    
 
-    ROWS, COLS = len(board), len(board[0])
-    count = 0
+    def NumberOfIslands(self, grid: list[list[int]]):
+        if not grid:
+            return 0
 
-    def dfs(row, col):
-        # return if not connecting square
-        if row >= ROWS or row < 0 or col >= COLS or col < 0:
-            return
-        if board[row][col] != 1:
-            return
-        # mark neighboring islands so won't revisit
-        board[row][col] = 'X'
-        
-        dfs(row + 1, col)
-        dfs(row - 1, col)
-        dfs(row, col + 1)
-        dfs(row, col - 1)
-        
-    
-    for r in range(ROWS):
-        for c in range(COLS):
-            if board[r][c] == 1:
-                count += 1
-                dfs(r, c)
+        rows, cols = len(grid), len(grid[0])
+        visit = set()
+        islands = 0
 
-    return count
+        #function within function
+        def bfs(row, col):
+            #iterative 
+            queue = collections.deque()
+            visit.add((row, col))
+            queue.append((row, col))
+
+            while queue:
+                row, col = queue.popleft()
+                directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+
+                for downRow, downCol in directions:
+
+                    row = row + downRow
+                    col = col + downCol
+
+                    if ((row) in range(rows) and 
+                        (col) in range(cols) and 
+                        grid[row][col] == 1 and 
+                        (row, col) not in visit):
+                            queue.append((row, col))
+                            visit.add((row, col))
+                    
+
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 1 and (row, col) not in visit:
+                    bfs(row, col)
+                    islands += 1
+
+        return islands        
 
 
 def main():
+
+    solution = Solution()
+
     board = [
         [1, 0, 1, 1, 1],
         [1, 1, 0, 1, 1],
@@ -35,12 +53,12 @@ def main():
         [0, 0, 0, 1, 0],
         [0, 0, 0, 0, 0]
     ]
-    print(num_islands(board)) # Output: 3
+    print(solution.NumberOfIslands(board)) # Output: 3
 
     board = [
         [1, 0, 0],
         [0, 0, 0]
     ]
-    print(num_islands(board)) # Output: 1
+    print(solution.NumberOfIslands(board)) # Output: 1
 
 main()

@@ -1,11 +1,13 @@
+import collections
+
 def reverse_words(input):
-    stack, res = [], []
+    reverse = collections.deque()
+
     input = input.split(' ') # identify words
     for i in input:
-        stack.append(i) # append to stack
-    while stack:
-        res.append(stack.pop()) # add top of stack to res then pop
-    return " ".join(res) 
+        reverse.appendleft(i) # append from the left, going backwards
+    
+    return " ".join(reverse) 
 
 
 def main():

@@ -1,20 +1,47 @@
 import heapq
 
-def merge_k_arrays(k, arrays):
-    curr, res = [], []
-    for array in arrays:
-        for i in array:
-            heapq.heappush(curr, i) # push all numbers to curr
-    
-    while curr:
-        min = heapq.heappop(curr) # pop smallest val and add to res
-        res.append(min)
-    
-    return res
+def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
 
-if __name__ == "__main__":
-    print(merge_k_arrays(2, [[1, 2, 3, 4, 5], [1, 3, 5, 7, 9]]))
-    # Output: [1, 1, 2, 3, 3, 4, 5, 5, 7, 9]
+    #edge case: if no lists
+    if not lists or len(lists) == 0:
+        return None
 
-    print(merge_k_arrays(3, [[1, 4, 7, 9], [2, 6, 7, 10, 11, 13, 15], [3, 8, 12, 13, 16]]))
-    # Output: [1, 2, 3, 4, 6, 7, 7, 8, 9, 10, 11, 12, 13, 13, 15, 16]
+    #merge lists, two by two until only 1 left
+    while len(lists) > 1:
+
+        updatedMerges = []
+
+        for i in range(0, len(lists), 2):
+            l1 = lists[i]
+
+            if (i+1) < len(lists):
+                l2 = lists[i+1]
+            else:
+                l2 = None
+
+            updatedMerges.append(self.mergeLists(l1, l2))
+
+        lists = updatedMerges
+
+    return lists[0]
+
+def mergeLists(self, l1, l2):  
+    dummy = ListNode()
+    tail = dummy
+
+    while l1 and l2:
+        if l1.val < l2.val:
+            tail.next = l1
+            l1 = l1.next
+        else:
+            tail.next = l2
+            l2 = l2.next
+
+        tail = tail.next
+
+    if l1:
+        tail.next = l1
+    if l2:
+        tail.next = l2
+
+    return dummy.next

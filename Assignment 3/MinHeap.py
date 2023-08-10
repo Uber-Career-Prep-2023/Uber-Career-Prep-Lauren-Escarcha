@@ -1,26 +1,30 @@
+import math
+
 class MinHeap:
     
     def __init__(self):
         self.minHeap = []
 
     def top(self):
-        return self.heap[0]
+        return self.minHeap[0]
 
-    def insert(self, num, minHeap):
+    def insert(self, num):
         #1 - add element to end (rightmost of last level)
         self.minHeap.append(num)
 
         #index of inserted num and given parents
         child = len(self.minHeap) - 1
-        parent = (child-1)/2
+        parent = math.floor((child-1)/2)
 
         #HEAPIFY UP:
         #while not root
         #and parent is LESS than child
-        while(child > 0 and self.minHeap[parent] > self.minHeap[child]):
+        while(child > 0 and self.minHeap[int(parent)] > self.minHeap[child]):
             #swap 
-            self.heap[parent],self.heap[child] = self.heap[child],self.heap[parent]
-            child, parent = parent, (child-1)/2
+
+            self.minHeap[(parent)], self.minHeap[child] = self.minHeap[child], self.minHeap[(parent)]
+            child = parent
+            parent = math.floor((child-1)/2)
 
         #TODO: do I need this or can I just call heapify^?
 
@@ -57,7 +61,7 @@ class MinHeap:
 
         #if smallest is NOT parent, swap and continue with subtree
         if smallest != i:
-            print("smallest: ", self.minHeap[smallest])
+            # print("smallest: ", self.minHeap[smallest])
             self.minHeap[i],self.minHeap[smallest] = self.minHeap[smallest],self.minHeap[i]
             self.heapify(smallest)
 
@@ -79,11 +83,23 @@ class MinHeap:
 
 def main():
 
-    arr = [1,5,6,8,9,7,3] # 3 and 6 are suppose to swap
+    arr = [2,5,6,8,9,7,3] # 3 and 6 are suppose to swap once heapified
     myHeap = MinHeap()
 
+    #build heap from array^
     myHeap.buildHeap(arr)
     myHeap.printHeap()
+
+    myHeap.insert(1)
+    print()
+    myHeap.printHeap()
+
+    myHeap.delete()
+    print()
+    myHeap.printHeap()
+
+    print()
+    print(myHeap.top())
 
     return 0
 
